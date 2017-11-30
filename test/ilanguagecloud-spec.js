@@ -1,9 +1,9 @@
 'use strict';
-try{
+try {
   var ILanguageCloud = ILanguageCloud || require('../src/ilanguage-cloud').ILanguageCloud;
   var ILanguageClouds = ILanguageClouds || require('../src/ilanguage-clouds').ILanguageClouds;
   var sampleText = 'A cloud is a visible mass of condensed droplets or frozen crystals suspended in the atmosphere. Cloud(s) may also refer to: Contents  [hide]  1 Information Technology 2 Science 3 Fiction 4 Literature 5 Music 6 Other uses 7 See also Information Technology  Cloud computing, Internet-based development and use of computer technology stored on servers rather than the client computers Cloud (operating system), a browser-based operating system that will instantly be usable after turning on the PC, by the makers of gOS Tag cloud, a visual depiction of user-generated tags used typically to describe the content of web sites Cloud storage, a model of networked online storage Cloud.com, a company that develops open source cloud orchestration software CloudStack, an open source cloud computing software Science  Magellanic Clouds, irregular dwarf galaxies near our galaxy, the Milky Way Interstellar cloud, dense region between stars Molecular cloud, interstellar cloud containing molecules Electron cloud, analogy used to describe an electron that orbits around a nucleus Point cloud, in mathematics, a set of vertices in a three-dimensional coordinate system CLOUD, an experimental facility used to investigate the microphysics between galactic cosmic rays and clouds Cloud chamber, an experimental device used in early studies of particle physics Fiction  Cloud Strife, a character in Final Fantasy VII media Bou Keng Wan (\'Cloud\'), a Kung Fu character from the Hong Kong comic, Fung Wan Cloud (comics), a Marvel comic book character Cloudbase, the fictional skyborne headquarters of Spectrum, from the science fiction television series Captain Scarlet and the Mysterons Clouds (film), a 2000 film written and directed by Don Thompson and produced by Will Arntz Literature  The Clouds, a comedy by Aristophanes Clouds, a 1977 philosophical comedic play by British playwright Michael Frayn The Clouds, a 1797 play by the British writer Richard Cumberland The Cloud of Unknowing, a medieval mystical text Music  Clouds (60s rock band), a Scottish music group that operated in the late 1960s Clouds (Australian band), an indie rock group based in Sydney, Australia in the 1990s The Clouds (UK band), a British indie pop band from the 1980s Cloud (music), sound mass consisting of statistical clouds of microsounds \'Clouds\', a song by Chaka Khan from Naughty \'Clouds\', a song by Level 42 on the album Retroglide \'Clouds\', a song by Spires That in the Sunset Rise on the album This Is Fire \'Clouds\' (Zach Sobiech song) a song by Zach Sobiech Clouds (Joni Mitchell album), 1969 Clouds (Lee Ranaldo album), 1997 Clouds (Tiamat album), 1992 Clouds (EP), an EP by Nosound \'Cloudy\', by Average White Band from the album Cut the Cake Other uses  Cloud (dancer), a b-boy, writer, and director from Florida Cloud (surname) Cloud, California, a former settlement in Kings County Clodoald (522–560), better known as Cloud or Saint Cloud, son of King Chlodomer of Orleans Saint-Cloud, a commune in the western suburbs of Paris, France Cloud (video game), a 2005 third-person computer puzzle game See also  The Cloud (disambiguation) Cloud Nine (disambiguation) Red Cloud (disambiguation) St. Cloud (disambiguation) White Cloud (disambiguation) McCloud (disambiguation)';
-}catch(exception){
+} catch (exception) {
   console.log(exception.stack);
 }
 
@@ -68,7 +68,17 @@ describe('lib/ilanguage-cloud', function() {
 
 
     it('should automatically clean the text to create informative wordclouds', function() {
-      expect(true).toBeTruthy();
+      var cloud = {
+        orthography: sampleText,
+        caseSensitivity: false,
+        morphemeSegmentationOptions: {
+          algorithm: 'MorphoParser',
+          seeds: 'condens-ed droplet-s crystal-s suspend-ed',
+          maxIterations: 2
+        }
+      };
+      cloud = new ILanguageCloud(cloud).runSegmenter();
+      expect(cloud.filteredText).toEqual('A cloud   visible   condensed droplets  frozen crystals suspended   atmosphere   may  refer  Contents hide  Information Technology  Science  Fiction  Literature         Information Technology  computing Internet-based development  use  computer technology stored  servers rather than  client computers  operating system  browser-based operating system   instantly  usable after turning      makers  gOS Tag cloud  visual depiction  user-generated tags  typically  describe  content  web sites  storage  model  networked online storage  com  company  develops  source cloud orchestration software CloudStack   source cloud computing software Science Magellanic Clouds irregular dwarf galaxies near our galaxy  Milky Way Interstellar cloud dense region between stars Molecular cloud interstellar cloud containing molecules Electron cloud analogy   describe  electron  orbits around  nucleus Point cloud  mathematics  set  vertices   three-dimensional coordinate system CLOUD  experimental facility   investigate  microphysics between galactic cosmic rays  clouds  chamber  experimental device   early studies  particle physics Fiction  Strife  character  Final Fantasy VII media Bou Keng    Kung  character   Hong Kong  Fung   comics  Marvel  book character Cloudbase  fictional skyborne headquarters  Spectrum   science fiction television series Captain Scarlet   Mysterons Clouds   2000  written  directed  Don Thompson  produced  Will Arntz Literature The Clouds  comedy  Aristophanes Clouds  1977 philosophical comedic   British playwright Michael Frayn The Clouds  1797    British writer Richard Cumberland The   Unknowing  medieval mystical text  Clouds 60s    Scottish music   operated   late 1960s Clouds Australian      based  Sydney Australia   1990s The Clouds    British  pop    1980s  music sound  consisting  statistical clouds  microsounds Clouds    Chaka Khan  Naughty Clouds    Level     Retroglide Clouds    Spires That   Sunset Rise    This Is Fire Clouds  Sobiech      Sobiech Clouds Joni Mitchell  1969 Clouds Lee Ranaldo  1997 Clouds Tiamat  1992 Clouds     Nosound Cloudy  Average  Band    Cut  Cake    dancer  b-boy writer  director  Florida  surname  California  former settlement  Kings County Clodoald 522 560 better known    Saint  son  King Chlodomer  Orleans Saint-Cloud  commune   western suburbs  Paris France  video   2005 third-person computer puzzle    The  disambiguation  Nine disambiguation Red  disambiguation   disambiguation   disambiguation McCloud disambiguation');
     });
 
     it('should guess negative words for this text', function() {
@@ -76,7 +86,41 @@ describe('lib/ilanguage-cloud', function() {
     });
 
     it('should guess buzz words for this text', function() {
-      expect(true).toBeTruthy();
+      var cloud = {
+        orthography: sampleText,
+        caseSensitivity: false,
+        morphemeSegmentationOptions: {
+          algorithm: 'MorphoParser',
+          seeds: 'condens-ed droplet-s crystal-s suspend-ed',
+          maxIterations: 2
+        }
+      };
+      cloud = new ILanguageCloud(cloud).runSegmenter();
+      expect(cloud.buzzWordsArray).toEqual([
+        'between',
+        'British',
+        'character',
+        'Clouds',
+        'computer',
+        'computing',
+        'describe',
+        'disambiguation',
+        'Electron',
+        'experimental',
+        'Fiction',
+        'Information',
+        'Interstellar',
+        'Literature',
+        'operating',
+        'Science',
+        'Sobiech',
+        'software',
+        'source',
+        'storage',
+        'system',
+        'Technology',
+        'writer'
+      ]);
     });
 
   });
@@ -95,14 +139,20 @@ describe('lib/ilanguage-cloud', function() {
       expect(ILanguageClouds).toBeDefined();
     });
 
-    it('should open an existing database or a new one', function() {
+    it('should open an existing database or a new one', function(done) {
       var username = 'testingilanguageclouds';
       var clouds = new ILanguageClouds({
         username: username,
         dbname: username + '-firstcorpus',
-        url: 'https://localhost:6984'
+        url: 'http://localhost:8984'
       });
       expect(clouds).toBeDefined();
+
+      clouds.fetch().catch(function(result) {
+        expect(result.userFriendlyErrors[0]).toEqual('Server is not responding for http://localhost:8984/testingilanguageclouds-firstcorpus/_design/data/_view/by_type?key="private_corpora"&descending=true&limit=1000, please report this.');
+
+        done();
+      });
     });
 
 
